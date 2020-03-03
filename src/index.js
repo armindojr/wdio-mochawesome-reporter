@@ -14,16 +14,17 @@ class WdioMochawesomeReporter extends WDIOReporter {
         this.sanitizedCaps = runner.sanitizedCapabilities
         this.sessionId = runner.sessionId
         // mochawesome requires this root suite for HTML report generation to work properly
-        this.results = {
+        this.fullFile = runner.specs[0].replace(process.cwd(), '')
+        this.body = {
             stats: new Stats(runner.start),
-            suites: new Suite(true, {'title': ''}),
+            results: [new Suite(true, {'title': '', 'fullFile': this.fullFile})],
             copyrightYear: new Date().getFullYear()
         }
     }
 
     onSuiteStart (suite) {
         this.currSuite = new Suite(false, suite, this.sanitizedCaps)
-        this.results.stats.incrementSuites()
+        this.body.stats.incrementSuites()
     }
 
     onTestStart (test) {
@@ -48,18 +49,18 @@ class WdioMochawesomeReporter extends WDIOReporter {
         this.currTest.updateResult(test)
         this.currTest.context = JSON.stringify(this.currTest.context)
         this.currSuite.addTest(this.currTest)
-        this.results.stats.incrementTests(this.currTest)
+        this.body.stats.incrementTests(this.currTest)
     }
 
     onSuiteEnd (suite) {
         this.currSuite.duration = suite.duration
-        this.results.suites.addSuite(this.currSuite)
+        this.body.results[0].addSuite(this.currSuite)
     }
 
     onRunnerEnd (runner) {
-        this.results.stats.end = runner.end
-        this.results.stats.duration = runner.duration
-        this.write(JSON.stringify(this.results))
+        this.body.stats.end = runner.end
+        this.body.stats.duration = runner.duration
+        this.write(JSON.stringify(this.body))
     }
 }
 

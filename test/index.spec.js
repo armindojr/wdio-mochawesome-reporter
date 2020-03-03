@@ -3,7 +3,10 @@ const WdioMochawesomeReporter = require('../src/index').default
 describe('Reporter Tests',()=>{
     const runner = {
         sanitizedCapabilities: 'chrome',
-        sessionId: '123456'
+        sessionId: '123456',
+        specs: [
+            `${process.cwd()}/test/file.js`
+        ]
     }
     let reporter
 
@@ -13,10 +16,10 @@ describe('Reporter Tests',()=>{
     })
 
     it('onRunnerStart',()=>{
-        expect(reporter.results).toMatchObject({ 
+        expect(reporter.body).toMatchObject({ 
             copyrightYear: expect.anything(),
             stats: expect.anything(),
-            suites: expect.anything()
+            results: expect.anything()
         })
         expect(reporter.sanitizedCaps).toBe(runner.sanitizedCapabilities)
         expect(reporter.sessionId).toBe(runner.sessionId)
@@ -26,7 +29,7 @@ describe('Reporter Tests',()=>{
         const suite = {title: 'sample suite'}
 
         reporter.onSuiteStart(suite)
-        expect(reporter.results.stats.suites).toBe(1)
+        expect(reporter.body.stats.suites).toBe(1)
         expect(reporter.currSuite.title).toBe(`${suite.title} (${runner.sanitizedCapabilities})`)
     })
 
@@ -72,7 +75,7 @@ describe('Reporter Tests',()=>{
         expect(reporter.currTest.duration).toBe(test._duration)
         expect(reporter.currTest.pass).toBe(true)
         expect(reporter.currSuite.tests.length).toBe(1)
-        expect(reporter.results.stats.tests).toBe(1)
+        expect(reporter.body.stats.tests).toBe(1)
     })
 
     it('onTestEnd - skipped',()=>{
@@ -85,7 +88,7 @@ describe('Reporter Tests',()=>{
         expect(reporter.currTest.duration).toBe(test._duration)
         expect(reporter.currTest.pending).toBe(true)
         expect(reporter.currSuite.tests.length).toBe(1)
-        expect(reporter.results.stats.tests).toBe(1)
+        expect(reporter.body.stats.tests).toBe(1)
     })
 
     it('onSuiteEnd',()=>{
@@ -98,8 +101,8 @@ describe('Reporter Tests',()=>{
         reporter.onSuiteEnd(suite)
 
         expect(reporter.currSuite.duration).toBe(suite.duration)
-        expect(reporter.results.stats.suites).toBe(1)
-        expect(reporter.results.suites.suites.length).toBe(1)
+        expect(reporter.body.stats.suites).toBe(1)
+        expect(reporter.body.results[0].suites.length).toBe(1)
     })
 
     it('onRunnerEnd', () =>{
@@ -108,7 +111,7 @@ describe('Reporter Tests',()=>{
         runner.duration = '9987'
 
         reporter.onRunnerEnd(runner)
-        expect(reporter.results.stats.end).toBe(runner.end)
-        expect(reporter.results.stats.duration).toBe(runner.duration)
+        expect(reporter.body.stats.end).toBe(runner.end)
+        expect(reporter.body.stats.duration).toBe(runner.duration)
     })
 })
