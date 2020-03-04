@@ -9,6 +9,8 @@ const mergeResults = (...args) => {
     const rawData = getDataFromFiles(dir, filePattern)
     const mergedResults = mergeData(rawData)
     writeFile(dir, mergedResults, customFileName)
+
+    return mergedResults
 }
 
 function getDataFromFiles (dir, filePattern) {
@@ -42,10 +44,10 @@ function mergeData (rawData) {
             mergedResults.stats.hasSkipped = mergedResults.stats.skipped > 0
             mergedResults.stats.passPercent = mergedResults.stats.tests === 0 ? 0 : Math.round((mergedResults.stats.passes / mergedResults.stats.tests) * 100)
             mergedResults.stats.pendingPercent = mergedResults.stats.tests === 0 ? 0 : Math.round((mergedResults.stats.pending / mergedResults.stats.tests) * 100)
-
+            
             // add suites
-            data.suites.suites.forEach(suite => {
-                mergedResults.suites.suites.push(suite)
+            data.results.forEach(suite => {
+                mergedResults.results.push(suite)
             })
         }
     })
