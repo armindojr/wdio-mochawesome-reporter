@@ -32,7 +32,7 @@ module.exports = class {
             this.pending += 1
             this.skipped += 1
         }
-        
+
         this.hasSkipped = this.skipped > 0
         this.passPercent = this.tests === 0 ? 0 : Math.round((this.passes / this.tests) * 100)
         this.pendingPercent = this.tests === 0 ? 0 : Math.round((this.pending / this.tests) * 100)

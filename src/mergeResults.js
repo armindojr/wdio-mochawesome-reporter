@@ -44,7 +44,7 @@ function mergeData (rawData) {
             mergedResults.stats.hasSkipped = mergedResults.stats.skipped > 0
             mergedResults.stats.passPercent = mergedResults.stats.tests === 0 ? 0 : Math.round((mergedResults.stats.passes / mergedResults.stats.tests) * 100)
             mergedResults.stats.pendingPercent = mergedResults.stats.tests === 0 ? 0 : Math.round((mergedResults.stats.pending / mergedResults.stats.tests) * 100)
-            
+
             // add suites
             data.results.forEach(suite => {
                 mergedResults.results.push(suite)

@@ -1,7 +1,7 @@
 WDIO Mochawesome Reporter
 =========================
 
-![Build Status](https://travis-ci.org/fijijavis/wdio-mochawesome-reporter.svg?branch=master) [![NPM version](https://badge.fury.io/js/wdio-mochawesome-reporter.svg)](http://badge.fury.io/js/wdio-mochawesome-reporter) [![npm](https://img.shields.io/npm/dm/wdio-mochawesome-reporter.svg?maxAge=2592000)]() 
+Forked repository with updates to newer version. [Base repo](https://github.com/fijijavis/wdio-mochawesome-reporter)
 
 Generates test results in the json formated needed to create [Mochawesome](https://github.com/adamgruber/mochawesome) reports.
 
@@ -45,7 +45,7 @@ reporters: [
 reporters: [
   'dot',
   ['mochawesome',{
-      outputDir: './Results'
+      outputDir: './mochawesome-report'
   }]
 ],
 ```
@@ -55,9 +55,9 @@ reporters: [
 reporters: [
   'dot',
   ['mochawesome',{
-    outputDir: './Results',
+    outputDir: './mochawesome-report',
     outputFileFormat: function(opts) { 
-        return `results-${opts.cid}.${opts.capabilities}.json`
+        return `mochawesome-${opts.cid}.json`
     }
   }]
 ],
@@ -86,12 +86,13 @@ mergeResults()
 
 2) Call node script from command line and pass 2 arguments
 
-* <RESULTS_DIR>: Directory where results files are written
-* <FILE_REGEX>: Regex pattern for finding `wdio-mochawesome-reporter` result files in <RESULTS_DIR>.  This is necessary because multiple reporters produce `json` result files
+* <RESULTS_DIR>: Directory where results files are written. __*Required*__
+* <FILE_REGEX>: Regex pattern for finding `wdio-mochawesome-reporter` result files in
+* Return: Json object generated from merging files
 
 Example:
 ```bash
-node mergeResults.json ./Results "wdio-mochawesome-*"
+node mergeResults.json ./mochawesome-report "mochawesome-*"
 ```
 
 ### As part of a wdio hook
@@ -102,7 +103,7 @@ The `onComplete` is a great place to call the `mergeResults` script. Usage this 
 // Located in your wdio.conf.js file
 onComplete: function (exitCode, config, capabilities, results) {
   const mergeResults = require('wdio-mochawesome-reporter/mergeResults')
-  mergeResults('./Results', "results-*")
+  mergeResults('./mochawesome-report', 'mochawesome-*')
 }
 ```
 
@@ -180,9 +181,21 @@ yarn add mochawesome-report-generator --dev
 1) `path/to/results.json` = path and name of json file
 2) `--reportTitle 'My Project Results'` = unique report title
 
+With wdio.conf.json:
+```javascript
+// Located in your wdio.conf.js file
+onComplete: function (exitCode, config, capabilities, results) {
+  const mergeResults = require('wdio-mochawesome-reporter/mergeResults')
+  const marge = require('mochawesome-report-generator')
+  marge.create(mergeResults('./mochawesome-report', "mochawesome-*"))
+}
+```
+
 ## Version Compatibility
 v1.x of ```wdio-mochawesome-reporter``` is compatible with ```2.3.2``` of ```mochawesome-report-generator```
 
 v2.x of ```wdio-mochawesome-reporter``` is compatible with version ```3.1.5``` of ```mochawesome-report-generator```
 
 v3.x of ```wdio-mochawesome-reporter``` is compatible with version ```3.1.5``` of ```mochawesome-report-generator```
+
+v4.x of ```wdio-mochawesome-reporter``` is compatible with version ```4.1.0``` of ```mochawesome-report-generator```
