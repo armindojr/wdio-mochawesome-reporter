@@ -52,7 +52,7 @@ class WdioMochawesomeReporter extends WDIOReporter {
         this.currSuite.addTest(this.currTest)
         this.body.stats.incrementTests(this.currTest)
     }
-    
+
     onSuiteEnd (suite) {
         this.currSuite.duration = suite.duration
         this.body.results[0].addSuite(this.currSuite)

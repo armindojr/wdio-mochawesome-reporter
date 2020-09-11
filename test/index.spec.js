@@ -16,8 +16,7 @@ describe('Reporter Tests',()=>{
     })
 
     it('onRunnerStart',()=>{
-        expect(reporter.body).toMatchObject({ 
-            copyrightYear: expect.anything(),
+        expect(reporter.body).toMatchObject({
             stats: expect.anything(),
             results: expect.anything()
         })
