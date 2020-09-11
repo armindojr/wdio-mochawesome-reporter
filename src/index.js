@@ -17,8 +17,7 @@ class WdioMochawesomeReporter extends WDIOReporter {
         this.fullFile = runner.specs[0].replace(process.cwd(), '')
         this.body = {
             stats: new Stats(runner.start),
-            results: [new Suite(true, {'title': '', 'fullFile': this.fullFile})],
-            copyrightYear: new Date().getFullYear()
+            results: [new Suite(true, {'title': '', 'fullFile': this.fullFile})]
         }
     }
 
@@ -41,6 +40,8 @@ class WdioMochawesomeReporter extends WDIOReporter {
         const isScreenshotEndpoint = /\/session\/[^/]*\/screenshot/
         if (isScreenshotEndpoint.test(cmd.endpoint) && cmd.result.value) {
             this.currTest.addScreenshotContext(cmd.result.value)
+        } else if (cmd.command === 'takeScreenshot' && cmd.result.value) {
+            this.currTest.addScreenshotContext(cmd.result.value)
         }
     }
 
@@ -51,7 +52,7 @@ class WdioMochawesomeReporter extends WDIOReporter {
         this.currSuite.addTest(this.currTest)
         this.body.stats.incrementTests(this.currTest)
     }
-
+    
     onSuiteEnd (suite) {
         this.currSuite.duration = suite.duration
         this.body.results[0].addSuite(this.currSuite)
